@@ -1,7 +1,7 @@
 import requests
 
 # remote
-BASE = "https://murmuring-reef-63091-f9619afb8f40.herokuapp.com/"
+BASE = "https://heroku-tests-app-1a282992c1f2.herokuapp.com/"
 
 # local
 # BASE = "http://127.0.0.1:5000/"
