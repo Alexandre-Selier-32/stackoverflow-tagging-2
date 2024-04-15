@@ -16,6 +16,11 @@ def prod():
     b = int(request.form["b"])
     return {"data": a * b}
 
+@app.route("/is_js", methods=["POST"])
+def is_js():
+    sentence = request.form["sentence"]
+    result = "JavaScript" in sentence
+    return {"data": result}
 
 if __name__ == "__main__":
 	app.run(debug=True)

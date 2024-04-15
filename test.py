@@ -19,3 +19,15 @@ print(response.json())
 input()
 response = requests.post(BASE + "prod", data={"a": 7, "b": 4})
 print(response.json())
+
+input()
+response = requests.post(BASE + "is_js", data={"sentence": "Hello there"})
+print(response.json())
+
+input()
+response = requests.post(BASE + "is_js", data={"sentence": "How does JavaScript work?"})
+print(response.json())
+
+input()
+response = requests.post(BASE + "is_js", data={"sentence": "Javascript confuses me"})
+print(response.json())
