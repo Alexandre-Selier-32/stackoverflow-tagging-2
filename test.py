@@ -31,3 +31,7 @@ print(response.json())
 input()
 response = requests.post(BASE + "is_js", data={"sentence": "Javascript confuses me"})
 print(response.json())
+
+input()
+response = requests.post(BASE + "house_price", data={"area": 120, "garden": 1})
+print(response.json())

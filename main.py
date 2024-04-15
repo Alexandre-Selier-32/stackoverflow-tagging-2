@@ -1,4 +1,5 @@
 from flask import Flask, request
+import pickle
 
 app = Flask(__name__)
 
@@ -21,6 +22,16 @@ def is_js():
     sentence = request.form["sentence"]
     result = "JavaScript" in sentence
     return {"data": result}
+
+filename = "house_price_model.sav"
+model = pickle.load(open(filename, "rb"))
+
+@app.route("/house_price", methods=["POST"])
+def house_price():
+    area = int(request.form["area"])
+    garden = int(request.form["garden"])
+    price = model.predict([[area, garden]])[0]
+    return {"data": price}
 
 if __name__ == "__main__":
 	app.run(debug=True)
