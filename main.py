@@ -92,7 +92,7 @@ def bow__tags():
     word_list = get_word_list()
     presence_vector = get_presence_vector(tokens, word_list)
     bow_model = pickle.load(open("bow_model.sav", "rb"))
-    tags = bow_model.predict([presence_vector])[0]
+    tags = bow_model.predict([presence_vector])[0].tolist()
     return {"data": tags}
 
 
