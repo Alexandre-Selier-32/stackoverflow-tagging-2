@@ -1,6 +1,7 @@
 from flask import Flask, request
 import pickle
 import csv
+import re
 
 
 app = Flask(__name__)
@@ -47,6 +48,8 @@ def dummy_tags():
     word_list = get_word_list()
 
     question = request.form["question"]
+    question = re.sub(r'[^a-z]', ' ', question)
+
     return {"data": ["javascript", "python"]}
 
 
