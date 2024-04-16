@@ -3,6 +3,8 @@ import pickle
 import csv
 import re
 from nltk.corpus import stopwords
+import numpy as np
+import pandas as pd
 
 
 app = Flask(__name__)
