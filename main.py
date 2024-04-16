@@ -2,6 +2,7 @@ from flask import Flask, request
 import pickle
 import csv
 import re
+from nltk.corpus import stopwords
 
 
 app = Flask(__name__)
@@ -49,6 +50,10 @@ def dummy_tags():
 
     question = request.form["question"]
     question = re.sub(r'[^a-z]', ' ', question)
+    question = question.lower()
+    split_words = question.split()
+    split_words_without_stops = [word for word in split_words if word not in stopwords.words('english')]
+
 
     return {"data": ["javascript", "python"]}
 
