@@ -48,6 +48,13 @@ def bow__tags():
             word_list = [row[0] for row in nested_word_list]
             return word_list
 
+    def get_tag_list():
+        with open('tag_list.csv') as f:
+            read = csv.reader(f)
+            nested_tag_list = list(read)
+            tag_list = [row[0] for row in nested_tag_list]
+            return tag_list
+
     def clean_and_split(sentence):
 
         def lower_keep_only_letters(sentence):
@@ -92,8 +99,15 @@ def bow__tags():
     word_list = get_word_list()
     presence_vector = get_presence_vector(tokens, word_list)
     bow_model = pickle.load(open("bow_model.sav", "rb"))
-    tags = bow_model.predict([presence_vector])[0].tolist()
-    return {"data": tags}
+    tag_recommendation_bools = bow_model.predict([presence_vector])[0].tolist()
+    tag_list = get_tag_list()
+
+    recommended_tags = []
+    for i, tag in enumerate(tag_list):
+        if tag_recommendation_bools[i] == 1:
+            recommended_tags.append(tag)
+
+    return {"data": recommended_tags}
 
 
 
