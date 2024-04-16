@@ -33,5 +33,10 @@ def house_price():
     price = model.predict([[area, garden]])[0]
     return {"data": price}
 
+@app.route("/dummy_tags", methods=["POST"])
+def dummy_tags():
+    question = request.form["question"]
+    return {"data": ["javascript", "python"]}
+
 if __name__ == "__main__":
 	app.run(debug=True)
