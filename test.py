@@ -37,5 +37,9 @@ response = requests.post(BASE + "house_price", data={"area": 120, "garden": 1})
 print(response.json())
 
 input()
-response = requests.post(BASE + "dummy_tags", data={"question": "I'm having trouble with arrays"})
+response = requests.post(BASE + "bow_tags", data={"question": "I'm having trouble with arrays"})
+print(response.json())
+
+input()
+response = requests.post(BASE + "bow_tags", data={"question": "JavaScript is worse than Python."})
 print(response.json())
