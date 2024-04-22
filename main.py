@@ -3,13 +3,13 @@ import numpy as np
 import pandas as pd
 import pickle
 import re
+import transformers
 
 from flask import Flask, request
 from nltk.corpus import stopwords
-from transformers.TFAutoModel import from_pretrained
 
-bert_model = from_pretrained('bert-base-uncased')
 
+bert_model = transformers.TFAutoModel.from_pretrained('bert-base-uncased')
 
 app = Flask(__name__)
 
