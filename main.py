@@ -1,5 +1,4 @@
 import csv
-import gensim.downloader
 import numpy as np
 import pandas as pd
 import pickle
@@ -7,8 +6,9 @@ import re
 
 from flask import Flask, request
 from nltk.corpus import stopwords
+from transformers.TFAutoModel import from_pretrained
 
-word2vec_vectors = gensim.downloader.load('word2vec-google-news-300')
+bert_model = from_pretrained('bert-base-uncased')
 
 
 app = Flask(__name__)
