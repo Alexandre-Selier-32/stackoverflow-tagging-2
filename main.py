@@ -1,10 +1,14 @@
-from flask import Flask, request
-import pickle
 import csv
-import re
-from nltk.corpus import stopwords
+import gensim.downloader
 import numpy as np
 import pandas as pd
+import pickle
+import re
+
+from flask import Flask, request
+from nltk.corpus import stopwords
+
+word2vec_vectors = gensim.downloader.load('word2vec-google-news-300')
 
 
 app = Flask(__name__)
