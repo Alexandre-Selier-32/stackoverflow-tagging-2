@@ -1,10 +1,11 @@
+import nltk
 import numpy as np
 import pandas as pd
 import pickle
 import re
 
 from flask import Flask, request
-from nltk.tokenize import word_tokenize
+
 nltk.download("punkt")
 
 app = Flask(__name__)
@@ -73,7 +74,7 @@ def tags():
                 document = convert(document)
                 document = remove_html_tags(document)
                 document = keep_only_wanted_chars(document)
-                document = word_tokenize(document)
+                document = nltk.tokenize.word_tokenize(document)
                 document = convert_post_tokenization(document)
                 document = ' '.join(document)
                 return document
