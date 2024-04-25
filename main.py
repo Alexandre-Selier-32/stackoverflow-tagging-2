@@ -1,4 +1,3 @@
-import csv
 import numpy as np
 import pandas as pd
 import pickle
@@ -6,6 +5,7 @@ import re
 
 from flask import Flask, request
 from nltk.tokenize import word_tokenize
+nltk.download("punkt")
 
 app = Flask(__name__)
 
