@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import pickle
 import re
-import sklearn
 
 from flask import Flask, request
 
