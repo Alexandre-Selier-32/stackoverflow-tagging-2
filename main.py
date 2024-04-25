@@ -5,10 +5,7 @@ import pickle
 import re
 
 from flask import Flask, request
-from transformers import TFAutoModel
-
-
-bert_model = TFAutoModel.from_pretrained('bert-base-uncased')
+from nltk.tokenize import word_tokenize
 
 app = Flask(__name__)
 
@@ -16,256 +13,141 @@ app = Flask(__name__)
 def index():
 	return {"data": "Welcome to the StackOverflow tag predictor!"}
 
-@app.route("/bow_tags", methods=["POST"])
-def bow__tags():
+@app.route("/tags", methods=["POST"])
+def tags():
 
-    def get_word_list():
-        with open('word_list.csv') as f:
-            read = csv.reader(f)
-            nested_word_list = list(read)
-            word_list = [row[0] for row in nested_word_list]
-            return word_list
+    def predict_tags(title, body):
 
-    def get_tag_list():
-        with open('tag_list.csv') as f:
-            read = csv.reader(f)
-            nested_tag_list = list(read)
-            tag_list = [row[0] for row in nested_tag_list]
-            return tag_list
+        def get_vectorized_title_and_body(title, body):
 
-    def clean_and_split(sentence):
+            def clean(document):
 
-        def lower_keep_only_letters(sentence):
-            for str_to_remove in [
-                '<blockquote>',
-                '</blockquote>',
-                '<br>',
-                '</br>',
-                '<code>',
-                '</code>',
-                '<em>',
-                '</em>',
-                '<p>',
-                '</p>',
-                '<pre>',
-                '</pre>',
-                '<strong>',
-                '</strong>'
-            ]:
-                sentence = sentence.replace(str_to_remove, ' ')
+                TO_CONVERT = {
+                    'c#': 'csharp',
+                    'c++': 'cplusplus',
+                    'asp.net': 'aspdotnet',
+                    'node.js': 'nodejs'
+                }
 
-            sentence = sentence.lower()
-            sentence = re.sub(r'[^a-z]', ' ', sentence)
-            return sentence
+                def convert(string, to_convert=TO_CONVERT):
+                    for key, value in to_convert.items():
+                        string = string.replace(key, value)
+                    return string
 
-        def remove_stop_words(split_words):
-            stopwords = [
-                'i',
-                'me',
-                'my',
-                'myself',
-                'we',
-                'our',
-                'ours',
-                'ourselves',
-                'you',
-                "you're",
-                "you've",
-                "you'll",
-                "you'd",
-                'your',
-                'yours',
-                'yourself',
-                'yourselves',
-                'he',
-                'him',
-                'his',
-                'himself',
-                'she',
-                "she's",
-                'her',
-                'hers',
-                'herself',
-                'it',
-                "it's",
-                'its',
-                'itself',
-                'they',
-                'them',
-                'their',
-                'theirs',
-                'themselves',
-                'what',
-                'which',
-                'who',
-                'whom',
-                'this',
-                'that',
-                "that'll",
-                'these',
-                'those',
-                'am',
-                'is',
-                'are',
-                'was',
-                'were',
-                'be',
-                'been',
-                'being',
-                'have',
-                'has',
-                'had',
-                'having',
-                'do',
-                'does',
-                'did',
-                'doing',
-                'a',
-                'an',
-                'the',
-                'and',
-                'but',
-                'if',
-                'or',
-                'because',
-                'as',
-                'until',
-                'while',
-                'of',
-                'at',
-                'by',
-                'for',
-                'with',
-                'about',
-                'against',
-                'between',
-                'into',
-                'through',
-                'during',
-                'before',
-                'after',
-                'above',
-                'below',
-                'to',
-                'from',
-                'up',
-                'down',
-                'in',
-                'out',
-                'on',
-                'off',
-                'over',
-                'under',
-                'again',
-                'further',
-                'then',
-                'once',
-                'here',
-                'there',
-                'when',
-                'where',
-                'why',
-                'how',
-                'all',
-                'any',
-                'both',
-                'each',
-                'few',
-                'more',
-                'most',
-                'other',
-                'some',
-                'such',
-                'no',
-                'nor',
-                'not',
-                'only',
-                'own',
-                'same',
-                'so',
-                'than',
-                'too',
-                'very',
-                's',
-                't',
-                'can',
-                'will',
-                'just',
-                'don',
-                "don't",
-                'should',
-                "should've",
-                'now',
-                'd',
-                'll',
-                'm',
-                'o',
-                're',
-                've',
-                'y',
-                'ain',
-                'aren',
-                "aren't",
-                'couldn',
-                "couldn't",
-                'didn',
-                "didn't",
-                'doesn',
-                "doesn't",
-                'hadn',
-                "hadn't",
-                'hasn',
-                "hasn't",
-                'haven',
-                "haven't",
-                'isn',
-                "isn't",
-                'ma',
-                'mightn',
-                "mightn't",
-                'mustn',
-                "mustn't",
-                'needn',
-                "needn't",
-                'shan',
-                "shan't",
-                'shouldn',
-                "shouldn't",
-                'wasn',
-                "wasn't",
-                'weren',
-                "weren't",
-                'won',
-                "won't",
-                'wouldn',
-                "wouldn't"]
-            split_words_without_stops = [word for word in split_words if word not in stopwords]
-            return split_words_without_stops
+                TO_CONVERT_POST_TOKENIZATION = {'c': 'clanguage', 'r': 'rlanguage'}
 
-        sentence = lower_keep_only_letters(sentence)
-        split_words = sentence.split()
-        split_words_without_stops = remove_stop_words(split_words)
-        return split_words_without_stops
+                def convert_post_tokenization(tokens, to_convert_post_tokenization=TO_CONVERT_POST_TOKENIZATION):
+                    for key, value in to_convert_post_tokenization.items():
+                        for i, token in enumerate(tokens):
+                            if token == key:
+                                tokens[i] = value
+                    return tokens
 
-    def get_presence_vector(tokens, word_list):
-        presence_list = [1 if word in tokens else 0 for word in word_list]
-        presence_vector = pd.Series(index=word_list, data=presence_list)
-        return presence_vector
+                HTML_TAGS = [
+                    '<blockquote>',
+                    '</blockquote>',
+                    '<br>',
+                    '</br>',
+                    '<code>',
+                    '</code>',
+                    '<em>',
+                    '</em>',
+                    '<p>',
+                    '</p>',
+                    '<pre>',
+                    '</pre>',
+                    '<strong>',
+                    '</strong>'
+                ]
 
-    question = request.form["question"]
-    tokens = clean_and_split(question)
-    word_list = get_word_list()
-    presence_vector = get_presence_vector(tokens, word_list)
-    bow_model = pickle.load(open("bow_model.sav", "rb"))
-    tag_recommendation_bools = bow_model.predict([presence_vector])[0].tolist()
-    tag_list = get_tag_list()
+                def remove_html_tags(string, html_tags=HTML_TAGS):
+                    for html_tag in html_tags:
+                        string = string.replace(html_tag, ' ')
+                    return string
 
-    recommended_tags = []
-    for i, tag in enumerate(tag_list):
-        if tag_recommendation_bools[i] == 1:
-            recommended_tags.append(tag)
+                def keep_only_wanted_chars(string):
+                    string = re.sub(r'[^a-zA-Z\.,:;?!\']', ' ', string)
+                    return string
 
-    return {"data": recommended_tags}
+                document = document.lower()
+                document = convert(document)
+                document = remove_html_tags(document)
+                document = keep_only_wanted_chars(document)
+                document = word_tokenize(document)
+                document = convert_post_tokenization(document)
+                document = ' '.join(document)
+                return document
+
+            def vectorize(vectorizer, document):
+
+                vectorized_document = pd.DataFrame(
+                    data=vectorizer.transform([document]).toarray(),
+                    columns=vectorizer.get_feature_names_out()
+                )
+
+                return vectorized_document
+
+            clean_title = clean(title)
+            clean_body = clean(body)
+
+            title_vectorizer = pickle.load(open('title_vectorizer.sav', 'rb'))
+
+            vectorized_title = vectorize(title_vectorizer, clean_title)
+
+            body_vectorizer = pickle.load(open('body_vectorizer.sav', 'rb'))
+
+            vectorized_body = vectorize(body_vectorizer, clean_body)
+
+            vectorized_title_and_body = pd.concat([vectorized_title, vectorized_body], axis=1)
+
+            return vectorized_title_and_body
+
+        def predict_tags_from_vectorized_title_and_body(vectorized_title_and_body):
+
+            TAGS = [
+                'javascript',
+                'python',
+                'java',
+                'c_sharp',
+                'php',
+                'android',
+                'html',
+                'jquery',
+                'c_plus_plus',
+                'css',
+                'ios',
+                'sql',
+                'mysql',
+                'r',
+                'reactjs',
+                'node_js',
+                'arrays',
+                'c',
+                'asp_net',
+                'json'
+            ]
+
+            tag_predictor = pickle.load(open('tag_predictor.sav', 'rb'))
+
+            pred_array = tag_predictor.predict(vectorized_title_and_body)[0]
+
+            predicted_tags = []
+            for i, tag in enumerate(TAGS):
+                if pred_array[i] == 1:
+                    predicted_tags.append(tag)
+
+            return predicted_tags
+
+        vectorized_title_and_body = get_vectorized_title_and_body(title, body)
+        predicted_tags = predict_tags_from_vectorized_title_and_body(vectorized_title_and_body)
+        return predicted_tags
+
+    title = request.form["title"]
+    body = request.form["body"]
+
+    predicted_tags = predict_tags(title, body)
+
+    return {"data": predicted_tags}
 
 
 if __name__ == "__main__":
