@@ -10,9 +10,9 @@ response = requests.get(BASE)
 print(response.json())
 
 input()
-response = requests.post(BASE + "bow_tags", data={"question": "I'm having trouble with arrays"})
+response = requests.post(BASE + "tags", data={"title": "C arrays issue", "body": "I'm looking for a way to understand how arrays work in C."})
 print(response.json())
 
 input()
-response = requests.post(BASE + "bow_tags", data={"question": "JavaScript is worse than Python."})
+response = requests.post(BASE + "tags", data={"title": "How does JavaScript work?", "body": "This for example <b> you know? </b>"})
 print(response.json())
