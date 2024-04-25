@@ -79,11 +79,20 @@ def tags():
                 document = ' '.join(document)
                 return document
 
-            def vectorize(vectorizer, document):
+            def vectorize(is_title_or_body, document):
+
+                if is_title_or_body == 'title':
+                    vectorizer = pickle.load(open('title_vectorizer.sav', 'rb'))
+                else:
+                    vectorizer = pickle.load(open('body_vectorizer.sav', 'rb'))
+
+                data = vectorizer.transform([document]).toarray()
+
+                columns = [is_title_or_body + '_' + feature_name for feature_name in vectorizer.get_feature_names_out()]
 
                 vectorized_document = pd.DataFrame(
-                    data=vectorizer.transform([document]).toarray(),
-                    columns=vectorizer.get_feature_names_out()
+                    data=data,
+                    columns=columns
                 )
 
                 return vectorized_document
@@ -91,13 +100,10 @@ def tags():
             clean_title = clean(title)
             clean_body = clean(body)
 
-            title_vectorizer = pickle.load(open('title_vectorizer.sav', 'rb'))
 
-            vectorized_title = vectorize(title_vectorizer, clean_title)
+            vectorized_title = vectorize('title', clean_title)
 
-            body_vectorizer = pickle.load(open('body_vectorizer.sav', 'rb'))
-
-            vectorized_body = vectorize(body_vectorizer, clean_body)
+            vectorized_body = vectorize('body', clean_body)
 
             vectorized_title_and_body = pd.concat([vectorized_title, vectorized_body], axis=1)
 
