@@ -6,7 +6,10 @@ import re
 
 from flask import Flask, request
 
-nltk.download("punkt")
+try:
+    nltk.download("punkt")
+except:
+    pass
 
 app = Flask(__name__)
 
