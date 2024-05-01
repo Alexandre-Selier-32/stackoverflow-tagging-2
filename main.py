@@ -13,8 +13,6 @@ except:
 
 app = Flask(__name__)
 
-# comment added to test a new deployment
-
 @app.route("/")
 def index():
 	return {"data": "Welcome to the StackOverflow tag predictor!"}
