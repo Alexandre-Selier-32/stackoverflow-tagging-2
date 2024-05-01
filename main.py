@@ -85,9 +85,9 @@ def tags():
             def vectorize(is_title_or_body, document):
 
                 if is_title_or_body == 'title':
-                    vectorizer = pickle.load(open('title_vectorizer.sav', 'rb'))
+                    vectorizer = pickle.load(open('models/title_vectorizer.sav', 'rb'))
                 else:
-                    vectorizer = pickle.load(open('body_vectorizer.sav', 'rb'))
+                    vectorizer = pickle.load(open('models/body_vectorizer.sav', 'rb'))
 
                 data = vectorizer.transform([document]).toarray()
 
@@ -137,7 +137,7 @@ def tags():
                 'json'
             ]
 
-            tag_predictor = pickle.load(open('tag_predictor.sav', 'rb'))
+            tag_predictor = pickle.load(open('models/tag_predictor.sav', 'rb'))
 
             pred_array = tag_predictor.predict(vectorized_title_and_body)[0]
 
