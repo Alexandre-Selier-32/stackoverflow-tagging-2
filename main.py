@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-	return {"data": "Welcome to the StackOverflow tag predictor! Including Error 400 tests."}
+	return {"data": "Welcome to the StackOverflow tag predictor!"}
 
 @app.route("/tags", methods=["POST"])
 def tags():
@@ -119,22 +119,22 @@ def tags():
                 'javascript',
                 'python',
                 'java',
-                'c_sharp',
+                'c#',
                 'php',
                 'android',
                 'html',
                 'jquery',
-                'c_plus_plus',
+                'c++',
                 'css',
                 'ios',
                 'sql',
                 'mysql',
                 'r',
                 'reactjs',
-                'node_js',
+                'node.js',
                 'arrays',
                 'c',
-                'asp_net',
+                'asp.net',
                 'json'
             ]
 
