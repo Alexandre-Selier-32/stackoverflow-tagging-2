@@ -26,11 +26,12 @@ class MyTestCase(unittest.TestCase):
         result_as_set = set(result)
         self.assertEqual(result_as_set, {'javascript'})
 
-    def test_to_fail(self):
-        response = self.app.post(BASE + "tags", data={"title": "How does JavaScript work?", "body": "This for example <b> you know? </b>"})
-        result = json.loads(response.data.decode('utf-8'))['data']
-        result_as_set = set(result)
-        self.assertEqual(result_as_set, {'impossible_tag'})
+    # This test should fail if you add it. Add it if you want to test that tests fail properly.
+    # def test_to_fail(self):
+    #     response = self.app.post(BASE + "tags", data={"title": "How does JavaScript work?", "body": "This for example <b> you know? </b>"})
+    #     result = json.loads(response.data.decode('utf-8'))['data']
+    #     result_as_set = set(result)
+    #     self.assertEqual(result_as_set, {'impossible_tag'})
 
 if __name__ == '__main__':
     unittest.main()
