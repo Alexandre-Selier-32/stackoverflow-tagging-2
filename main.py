@@ -5,6 +5,7 @@ import pickle
 import re
 
 from flask import Flask, request
+from flask_restful import abort
 
 try:
     nltk.download("punkt")
@@ -152,8 +153,15 @@ def tags():
         predicted_tags = predict_tags_from_vectorized_title_and_body(vectorized_title_and_body)
         return predicted_tags
 
-    title = request.form["title"]
-    body = request.form["body"]
+    try:
+        title = request.form["title"]
+    except:
+        abort(400, message="Please include  a title.")
+
+    try:
+        body = request.form["body"]
+    except:
+        abort(400, message="Please include a body.")
 
     predicted_tags = predict_tags(title, body)
 
