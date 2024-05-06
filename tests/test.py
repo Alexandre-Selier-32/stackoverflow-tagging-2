@@ -36,6 +36,16 @@ class MyTestCase(unittest.TestCase):
         # So if the test arrives to this assert statement, we're fine.
         self.assert_(True)
 
+    def test_no_title(self):
+        response = self.app.post(BASE + "tags", data={"useless_data": "This has no purpose", "body": "I'm looking for a way to understand how arrays work in C."})
+
+        self.assertEquals(response.status_code, 400)
+
+    def test_no_body(self):
+        response = self.app.post(BASE + "tags", data={"title": "This has no purpose", "nothing": "This can't be used."})
+
+        self.assertEquals(response.status_code, 400)
+
     # This test should fail if you add it. Add it if you want to test that tests fail properly.
 
     # def test_to_fail(self):
