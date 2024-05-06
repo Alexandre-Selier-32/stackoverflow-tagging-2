@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-	return {"data": "Welcome to the StackOverflow tag predictor! Committing in YAML."}
+	return {"data": "Welcome to the StackOverflow tag predictor! Using git config."}
 
 @app.route("/tags", methods=["POST"])
 def tags():
