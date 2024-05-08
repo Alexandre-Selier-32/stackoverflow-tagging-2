@@ -1,0 +1,21 @@
+This repository builds a Flask API on a Heroku app.
+That API serves a tag prediction feature for StackOverflow questions.
+The API should receive POST calls including the question's title and body.
+It will then return a list of tags that seem related to the question,
+for example ['c++', 'arrays'].
+
+The prediction is done through a model that includes TF-IDF embeddings,
+followed by a multilabel, multiclass Logistic Regression that was trained offline.
+
+main.py includes the code to build the app, and to do predictions. It uses three
+models it finds in the "models" directory. Two of them vectorize the question's
+title and body. The third one does the prediction based on these embeddings.
+
+tests/test.py includes the unit tests. They test for correct predictions,
+for long input and for missing input. These tests can be fired manually.
+They are also fired during deployment thanks to GitHub Actions, and to
+.github/workflows/yaml_file.yml.
+
+manual_interface.py can be used by the operator to test for specific questions.
+You need to edit the question text, then type "python manual_interface.py" in
+the CLI, and the API's answer will be displayed.
