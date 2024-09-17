@@ -7,6 +7,15 @@ for example ['c++', 'arrays'].
 The prediction is done through a model that includes TF-IDF embeddings,
 followed by a multilabel, multiclass Logistic Regression that was trained offline.
 
+tag_prediction/ features 2 notebooks that helped build the models.
+The "exploration and feature engineering" notebook builds separate
+CSV files embeddings for TF-IDF, Word2Vec, BERT and USE.
+The "model selection" notebook compares performance for these embeddings and models
+such as XGBoost and Logistic Regression.
+It finds the best-performing embedding and model combination(TF-IDF and XGBoost),
+and also a combination which uses a light model for Heroku and still performs well
+(TF-IDF and Logistic Regression).
+
 main.py includes the code to build the app, and to do predictions. It uses three
 models it finds in the "models" directory. Two of them vectorize the question's
 title and body. The third one does the prediction based on these embeddings.
